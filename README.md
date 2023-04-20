@@ -45,7 +45,8 @@ At the end of this project, you are expected to be able to explain to anyone, wi
  * @array: The array to be printed
  * @size: Number of elements in @array
  */
-void print_array(const int *array, size_t size)
+
+<br>void print_array(const int *array, size_t size)
 {
     size_t i;
 
@@ -67,7 +68,7 @@ void print_array(const int *array, size_t size)
  * print_list - Prints a list of integers
  * @list: The list to be printed
  */
-void print_list(const listint_t *list)
+<br>void print_list(const listint_t *list)
 {
     int i;
 
