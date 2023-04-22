@@ -32,8 +32,10 @@ listint_t *create_listint(const int *array, size_t size);
 void selection_sort(int *array, size_t size);
 void int_swap(int *current, int *next);
 void quick_sort(int *array, size_t size);
-int partition(int *array, int start, int end, int size);
-void quick_sort2(int *array, int start, int end, int size);
+void swap_pos(int **array, size_t first, size_t second);
+size_t partition(int **array, size_t lower, size_t upper, size_t size);
+void sorter(int **array, size_t lb, size_t ub, size_t size);
+
 
 
 #endif

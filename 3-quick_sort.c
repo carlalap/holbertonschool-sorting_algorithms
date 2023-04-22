@@ -2,70 +2,98 @@
 #include "sort.h"
 
 /**
- * partition - partitions the array
- * @array: array to take in
- * @start: start of array;
- * @end: end of array
- * @size: full size of array
- * Return: position of pivot
+ * swap_pos - swaps position of values in array
+ *
+ * @array: array to be changed
+ * @first: first index
+ * @second: second index
  */
-int partition(int *array, int start, int end, int size)
+void swap_pos(int **array, size_t first, size_t second)
 {
-	int pivot = array[end];
-	int i = start, j, temp;
+	int holder;
 
-	for (j = start; j < end; j++)
+	holder = (*array)[first];
+	(*array)[first] = (*array)[second];
+	(*array)[second] = holder;
+}
+
+/**
+ * partition - splits the array into two parts
+ * part lower than the sorted index and a part higher
+ *
+ * @array: array to be sorted
+ * @lower: lower boundary
+ * @upper: upper boundary
+ * @size: size of the array
+ *
+ * Return: index of sorted pivot
+ */
+size_t partition(int **array, size_t lower, size_t upper, size_t size)
+{
+	size_t before, after, pivot;
+
+	pivot = upper;
+	before = lower;
+
+	for (after = before; after < upper; after++)
 	{
-		if (array[j] <= pivot)
+		/* check if array after is lesser than array pivot */
+		if ((*array)[after] <= (*array)[pivot])
 		{
-			if (i != j)
+			if (before != after)
 			{
-				temp = array[i];
-				array[i] = array[j];
-				array[j] = temp;
-				print_array(array, size);
+				swap_pos(array, before, after);
+				print_array(*array, size);
 			}
-			i++;
+			before += 1;
 		}
 	}
-	if (i != end)
-	{
-		temp = array[i];
-		array[i] = array[end];
-		array[end] = temp;
-		print_array(array, size);
-	}
-	return (i);
-}
-/**
- * quick_sort2 - quick sorts with recursion
- * @array: array to sort through
- * @start: start of array or subarray
- * @end: end of array or subarray
- * @size: size of full array
- */
-void quick_sort2(int *array, int start, int end, int size)
-{
-	int pivot;
 
-	if (start < end)
+	/* swap pivot to its original position */
+	if (before != after)
 	{
-		pivot = partition(array, start, end, size);
-		quick_sort2(array, start, pivot - 1, size);
-		printf("%d start %d pivot %d size\n", start, pivot - 1, size);
-		quick_sort2(array, pivot + 1, end, size);
-		printf("%d start %d pivot %d size\n", start, pivot + 1, size);
+		swap_pos(array, before, after);
+		print_array(*array, size);
 	}
+	return (before);
 }
 /**
- * quick_sort - quick sorts an array
- * @array: array to sort
- * @size: size of array
+ * sorter - recursively sorts the array given
+ *
+ * @array: array to be sorted
+ * @lb: lower bound
+ * @ub: upper bound
+ * @size: size of the array
+ */
+void sorter(int **array, size_t lb, size_t ub, size_t size)
+{
+	size_t sorted_index;
+
+	/* recursive breakpoint */
+	if (lb < ub && *array)
+	{
+		sorted_index = partition(array, lb, ub, size);
+
+		/* perform recursive sort */
+		if (sorted_index - lb > 1)	/* more than one element must be present */
+			sorter(array, lb, sorted_index - 1, size);    /* sort lower boundary */
+
+		if (ub - sorted_index > 1)
+			sorter(array, sorted_index + 1, ub, size);    /* sort upper boundary */
+	}
+}
+
+/**
+ * quick_sort - applies the quick sort algorithm to sort
+ * a given array
+ *
+ * @array: array to be sorted
+ * @size: size of the array
  */
 void quick_sort(int *array, size_t size)
 {
-	if (array == NULL || size < 2)
+	if (!array || size < 2)
 		return;
-	quick_sort2(array, 0, size - 1, size);
+	/* create the sorter function to recursively sort the array */
+	sorter(&array, 0, size - 1, size);
 }
-
